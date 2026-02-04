@@ -10,9 +10,11 @@
   --card-foreground: oklch(0.12 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.12 0 0);
-  --primary: rgb(0, 34, 120);
+  /* --primary: rgb(0, 34, 120); */
+  --secondary: #16b5cb;
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.32 0.16 243);
+  --primary: #128588;
+  /* --secondary: oklch(0.32 0.16 243); */
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.92 0 0);
   --muted-foreground: oklch(0.45 0 0);
@@ -122,4 +124,30 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-left linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marquee-right linear infinite;
 }

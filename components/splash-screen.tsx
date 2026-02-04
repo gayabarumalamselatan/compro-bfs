@@ -16,7 +16,7 @@ export function SplashScreen() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-900 to-blue-800 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-linear-to-br from-primary to-secondary backdrop-blur-sm">
       <style>{`
         @keyframes fadeOut {
           0% { opacity: 1; }
@@ -50,7 +50,7 @@ export function SplashScreen() {
 
       <div className="splash-container flex flex-col items-center justify-center gap-4">
         <div className="splash-logo flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-2xl">
-          <div className="text-3xl font-bold bg-gradient-to-br from-blue-900 to-blue-700 bg-clip-text text-transparent">
+          <div className="text-3xl font-bold bg-linear-to-br from-primary to-secondary bg-clip-text text-transparent">
             <img src="/images/logo.png" className="w-17 h-17" />
           </div>
         </div>

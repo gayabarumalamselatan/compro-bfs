@@ -34,10 +34,7 @@ const products = [
 export function FeaturedProducts() {
   const router = useRouter();
   return (
-    <section
-      id="solutions"
-      className="py-20 sm:py-28 bg-linear-to-b from-white via-blue-50 to-white"
-    >
+    <section id="solutions" className="py-20 sm:py-28 bg-white">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">

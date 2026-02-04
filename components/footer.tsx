@@ -4,7 +4,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-r from-primary to-secondary text-background">
+    <footer className="bg-primary text-background">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
@@ -15,7 +15,9 @@ export function Footer() {
                   BFS
                 </span>
               </div> */}
-              <img src="/images/logo.png" className="w-10 h-10" />
+              <div className="bg-white rounded-lg">
+                <img src="/images/logo.png" className="w-10 h-10" />
+              </div>
               <div className="flex flex-col">
                 <span className="font-bold text-background leading-none">
                   BFS
@@ -84,15 +86,15 @@ export function Footer() {
                   href="#"
                   className="text-background/70 hover:text-background transition-colors"
                 >
-                  Kemitraan
+                  Solusi
                 </Link>
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="#products"
                   className="text-background/70 hover:text-background transition-colors"
                 >
-                  Karir
+                  Produk
                 </Link>
               </li>
               <li>

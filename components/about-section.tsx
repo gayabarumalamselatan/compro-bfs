@@ -30,57 +30,65 @@ export function AboutSection() {
   ];
 
   return (
-    <section
-      id="about"
-      className="py-16 sm:py-20 md:py-28 bg-linear-to-b from-blue-50 to-white"
-    >
+    <section id="about" className="py-16 sm:py-20 md:py-28 bg-white">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-16 text-center">
           <div className="mb-4 inline-block">
-            <div className="rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary border border-primary/20">
-              Tentang Kami
-            </div>
+            <div className="text-primary font-semibold">Tentang Kami</div>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-3xl font-semibold text-gray-800 mb-4">
             Komitmen Kami untuk Kesehatan Indonesia
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          {/* <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             PT. BFS BINTANG LIMA adalah mitra terpercaya dalam mendistribusikan
             peralatan kesehatan berkualitas tinggi untuk meningkatkan standar
             pelayanan kesehatan di seluruh Indonesia
-          </p>
+          </p> */}
         </div>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-12 mb-16 items-center">
           {/* Left - Text Content */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">
-                Visi Kami
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Menjadi distributor alat kesehatan terpercaya yang menghubungkan
-                inovasi teknologi medis dengan kebutuhan pelayanan kesehatan
-                masyarakat Indonesia, mendorong peningkatan kualitas kesehatan
-                yang berkelanjutan dan inklusif.
-              </p>
+          <div className=" bg-gray-50 h-full px-10 flex flex-col items-center rounded-2xl">
+            <div className="my-auto flex flex-col gap-9">
+              <div>
+                <h3 className="text-primary text-xl font-bold mb-3">
+                  Sekilas BFS
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  BFS Healthcare memprioritaskan kualitas di atas segalanya,
+                  menyadari bahwa setiap peralatan dapat menunjang kenyamanan
+                  dan kebutuhan pasien. Melalui kurasi produk yang cermat, kami
+                  menjamin presisi, durabilitas, dan keandalan maksimal
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  Visi Kami
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Menjadi mitra distribusi alat kesehatan terpercaya dan
+                  terdepan di Indonesia, yang berperan strategis dalam
+                  menjembatani inovasi teknologi medis dengan pelayanan
+                  kesehatan nasional melalui standar kualitas dan integritas
+                  yang tak tertanding
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  Misi Kami
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Menyediakan akses alat kesehatan berkualitas tinggi melalui
+                  sistem distribusi resmi yang menjamin keaslian produk,
+                  kesinambungan pasokan, dan pelayanan terpercaya
+                </p>
+              </div>
             </div>
 
-            <div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">
-                Misi Kami
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Menyediakan peralatan kesehatan berkualitas internasional dengan
-                harga kompetitif, didukung oleh layanan purna jual terbaik dan
-                dukungan teknis yang responsif untuk memastikan setiap fasilitas
-                kesehatan dapat memberikan layanan optimal kepada pasien.
-              </p>
-            </div>
-
-            <div>
+            {/* <div>
               <h3 className="text-2xl font-bold text-foreground mb-3">
                 Nilai-Nilai Inti
               </h3>
@@ -114,7 +122,7 @@ export function AboutSection() {
                   </span>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
 
           {/* Right - Visual Cards */}
@@ -144,7 +152,7 @@ export function AboutSection() {
         </div>
 
         {/* Story Section */}
-        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl p-8 sm:p-12 border border-primary/10">
+        {/* <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl p-8 sm:p-12 border border-primary/10">
           <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
             Perjalanan Kami
           </h3>
@@ -205,7 +213,7 @@ export function AboutSection() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

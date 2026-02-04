@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Aurora from "./react-bits/Aurora";
+import CountUp from "./ui/CountUp";
 
 export function HeroSection() {
   return (
@@ -33,14 +34,14 @@ export function HeroSection() {
           {/* Main Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6">
             Mitra Distribusi{" "}
-            <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="bg-primary bg-clip-text text-transparent">
               Alat Kesehatan Terpercaya
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
-            Jembatani inovasi teknologi medis dengan pelayanan kesehatan
+          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+            Menjembatani inovasi teknologi medis dengan pelayanan kesehatan
             nasional melalui standar kualitas dan integritas yang tak
             tertandingi
           </p>
@@ -52,7 +53,7 @@ export function HeroSection() {
                 size="lg"
                 className="bg-primary hover:bg-secondary hover:cursor-pointer text-primary-foreground w-full sm:w-auto rounded-xl"
               >
-                Explore Products
+                Eksplor Produk
               </Button>
             </Link>
             <Link href="#contact">
@@ -61,7 +62,7 @@ export function HeroSection() {
                 size="lg"
                 className="w-full sm:w-auto text-primary hover:text-primary hover:cursor-pointer hover:bg-gray-100 bg-background backdrop-blur rounded-xl"
               >
-                Contact Us
+                Hubungi Kami
               </Button>
             </Link>
           </div>
@@ -70,25 +71,39 @@ export function HeroSection() {
           <div className="grid grid-cols-3 gap-4 pt-8 border-t border-border">
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-primary">
-                4+
+                <CountUp
+                  from={0}
+                  to={4}
+                  duration={2}
+                  className="count-up-text"
+                />
+                +
               </div>
-              <p className="text-sm text-muted-foreground">
-                Product Categories
-              </p>
+              <p className="text-sm text-muted-foreground">Kategori Produk</p>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-primary">
-                100%
+                <CountUp
+                  from={0}
+                  to={100}
+                  duration={2}
+                  className="count-up-text"
+                />
+                %
               </div>
-              <p className="text-sm text-muted-foreground">
-                Authentic Products
-              </p>
+              <p className="text-sm text-muted-foreground">Produk Autentik</p>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold text-primary">
-                100%
+                <CountUp
+                  from={0}
+                  to={100}
+                  duration={2}
+                  className="count-up-text"
+                />
+                %
               </div>
-              <p className="text-sm text-muted-foreground">Quality Assured</p>
+              <p className="text-sm text-muted-foreground">Kualitas Terjamin</p>
             </div>
           </div>
         </div>

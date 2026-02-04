@@ -1,30 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Globe, Mail, Pin } from "lucide-react";
 
 export function ContactSection() {
   return (
-    <section
-      id="contact"
-      className="py-20 sm:py-28 bg-gradient-to-b from-white to-blue-50"
-    >
+    <section id="contact" className="py-20 sm:py-28 bg-white">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Hubungi Kami
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Siap melayani dan memberikan solusi kesehatan terbaik untuk Anda
+          <h2 className="text-primary font-semibold mb-4">Hubungi Kami</h2>
+          <p className="text-3xl sm:text-4xl lg:text-3xl font-semibold text-gray-800 mb-4">
+            Siap Memberikan Solusi Kesehatan Terbaik
           </p>
         </div>
 
         {/* Contact Info */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Email */}
-          <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
+          {/* <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
             <CardHeader>
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                📧
+              <div className="mb-3 group-hover:scale-110 transition-transform">
+                <Mail />
               </div>
               <CardTitle>Email</CardTitle>
             </CardHeader>
@@ -36,13 +32,54 @@ export function ContactSection() {
                 business@bfsbintanglima.com
               </a>
             </CardContent>
-          </Card>
+          </Card> */}
+          <div className="bg-gray-50 p-10 rounded-2xl flex flex-col gap-5">
+            <Mail className="size-8 text-primary" />
+            <div className="flex flex-col gap-3">
+              <h2 className="font-semibold">Email</h2>
+              <a
+                href="mailto:business@bfsbintanglima.com"
+                className="text-primary hover:text-secondary text-sm break-all"
+              >
+                business@bfsbintanglima.com
+              </a>
+            </div>
+          </div>
+          <div className="bg-gray-50 p-10 rounded-2xl flex flex-col gap-5">
+            <Globe className="size-8 text-primary" />
+            <div className="flex flex-col gap-3">
+              <h2 className="font-semibold">Website</h2>
+              <a
+                href="https://bfsbintanglima.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-secondary text-sm break-all"
+              >
+                bfsbintanglima.com
+              </a>
+            </div>
+          </div>
+          <div className="bg-gray-50 rounded-2xl p-10 flex flex-col gap-5">
+            <Pin className="size-8 text-primary" />
+            <div className="flex flex-col gap-3">
+              <h2 className="font-semibold">Alamat</h2>
+              <p className="text-muted-foreground text-xs leading-relaxed">
+                AD Premier Office Park,
+                <br />
+                7th Floor, Suite 6<br />
+                Jalan TB. Simatupang No. 5<br />
+                Jakarta Selatan 12550
+                <br />
+                INDONESIA
+              </p>
+            </div>
+          </div>
 
           {/* Website */}
-          <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
+          {/* <Card className="border-border  hover:border-primary hover:shadow-lg transition-all duration-300 group">
             <CardHeader>
               <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                🌐
+                <Globe />
               </div>
               <CardTitle>Website</CardTitle>
             </CardHeader>
@@ -56,13 +93,13 @@ export function ContactSection() {
                 bfsbintanglima.com
               </a>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Address */}
-          <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
+          {/* <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
             <CardHeader>
               <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                📍
+                <Pin />
               </div>
               <CardTitle>Alamat</CardTitle>
             </CardHeader>
@@ -77,7 +114,7 @@ export function ContactSection() {
                 INDONESIA
               </p>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         {/* CTA Section */}

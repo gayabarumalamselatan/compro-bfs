@@ -12,6 +12,7 @@ import {
 import { ArrowRight, Search, Filter, Check } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { allProductsKatalog } from "@/data/products";
 // import Loading from "./loading";
 
 const productCategories = [
@@ -230,41 +231,39 @@ export default function ProductsPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-white">
         {/* Header Navigation */}
-        <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-40 shadow-md bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <Link
               href="/"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary">
-                <span className="font-bold text-primary-foreground text-sm">
-                  BFS
-                </span>
-              </div>
-              <div className="hidden sm:flex flex-col">
-                <span className="font-bold text-foreground leading-none">
-                  BFS
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  Healthcare
-                </span>
+              <div className="flex items-center gap-2">
+                <img src="/images/logo.png" className="w-10 h-10" />
+                <div className="hidden sm:flex flex-col">
+                  <span className="font-bold text-foreground leading-none">
+                    BFS
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Healthcare
+                  </span>
+                </div>
               </div>
             </Link>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="bg-transparent"
-            >
-              <Link href="/">Back to Home</Link>
-            </Button>
+            <nav className="hidden md:flex gap-8 items-center">
+              <Link
+                href={"/"}
+                className="text-sm font-medium bg-primary py-2 px-5 rounded-xl text-white"
+              >
+                Kembali ke Beranda
+              </Link>
+            </nav>
           </div>
         </header>
 
         {/* Hero Section */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <section className="py-12 sm:py-16 md:py-20 bg-white">
           <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
               Katalog Produk Lengkap
@@ -277,7 +276,7 @@ export default function ProductsPage() {
         </section>
 
         {/* Search & Filter Section */}
-        <section className="py-12 sm:py-16 md:py-20 border-b border-border bg-background">
+        <section className="py-12 sm:py-16 md:py-20 border-b border-border bg-white">
           <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-6">
               {/* Search Bar */}
@@ -350,58 +349,79 @@ export default function ProductsPage() {
                 </h2>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map((product, index) => (
-                    <Card
+                  {allProductsKatalog.map((product, index) => (
+                    <div
                       key={index}
-                      className="overflow-hidden hover:shadow-xl transition-all duration-300 border-border group flex flex-col"
+                      className="bg-gray-50 rounded-2xl flex flex-col h-96 p-6"
                     >
-                      <div className="bg-gradient-to-br from-primary/10 to-secondary/10 h-40 flex items-center justify-center relative overflow-hidden">
-                        <span className="text-6xl">{product.image}</span>
-                        {product.featured && (
-                          <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                            Unggulan
-                          </div>
-                        )}
+                      <div />
+
+                      <div className="flex items-center justify-center flex-1">
+                        <img className="h-60" src={product.image} />
+                        {/* <div className="text-9xl">{product.image}</div> */}
                       </div>
 
-                      <CardHeader className="flex-grow">
-                        <div className="text-xs font-medium text-primary mb-2 uppercase tracking-wide">
-                          {product.category}
-                        </div>
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                      <div className="mt-auto text-start">
+                        <p className="text-xs text-primary font-medium">
+                          {product.subCategory}
+                        </p>
+                        <h2 className="text-md font-semibold">
                           {product.name}
-                        </CardTitle>
-                        <CardDescription className="text-sm mt-2">
-                          {product.description}
-                        </CardDescription>
-                      </CardHeader>
+                        </h2>
+                      </div>
+                    </div>
 
-                      <CardContent className="space-y-4 pt-0">
-                        <div>
-                          <h4 className="font-semibold text-foreground mb-2 text-sm">
-                            Fitur:
-                          </h4>
-                          <ul className="space-y-1">
-                            {product.features
-                              .slice(0, 3)
-                              .map((feature, idx) => (
-                                <li
-                                  key={idx}
-                                  className="flex items-start gap-2 text-xs text-muted-foreground"
-                                >
-                                  <Check className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
-                                  {feature}
-                                </li>
-                              ))}
-                          </ul>
-                        </div>
+                    // <Card
+                    //   key={index}
+                    //   className="overflow-hidden hover:shadow-xl transition-all duration-300 border-border group flex flex-col"
+                    // >
+                    //   <div className="bg-gradient-to-br from-primary/10 to-secondary/10 h-40 flex items-center justify-center relative overflow-hidden">
+                    //     <span className="text-6xl">{product.image}</span>
+                    //     {product.featured && (
+                    //       <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                    //         Unggulan
+                    //       </div>
+                    //     )}
+                    //   </div>
 
-                        <Button className="w-full bg-primary hover:bg-secondary text-primary-foreground">
-                          Hubungi Sales
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </CardContent>
-                    </Card>
+                    //   <CardHeader className="flex-grow">
+                    //     <div className="text-xs font-medium text-primary mb-2 uppercase tracking-wide">
+                    //       {product.category}
+                    //     </div>
+                    //     <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                    //       {product.name}
+                    //     </CardTitle>
+                    //     <CardDescription className="text-sm mt-2">
+                    //       {product.description}
+                    //     </CardDescription>
+                    //   </CardHeader>
+
+                    //   <CardContent className="space-y-4 pt-0">
+                    //     <div>
+                    //       <h4 className="font-semibold text-foreground mb-2 text-sm">
+                    //         Fitur:
+                    //       </h4>
+                    //       <ul className="space-y-1">
+                    //         {product.features
+                    //           .slice(0, 3)
+                    //           .map((feature, idx) => (
+                    //             <li
+                    //               key={idx}
+                    //               className="flex items-start gap-2 text-xs text-muted-foreground"
+                    //             >
+                    //               <Check className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
+                    //               {feature}
+                    //             </li>
+                    //           ))}
+                    //       </ul>
+                    //     </div>
+
+                    //     <Button className="w-full bg-primary hover:bg-secondary text-primary-foreground">
+                    //       Hubungi Sales
+                    //       <ArrowRight className="ml-2 h-4 w-4" />
+                    //     </Button>
+                    //   </CardContent>
+                    // </Card>
                   ))}
                 </div>
               </>
@@ -426,7 +446,7 @@ export default function ProductsPage() {
         </section>
 
         {/* Product Categories Overview */}
-        <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary/5 to-secondary/5">
+        {/* <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary/5 to-secondary/5">
           <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
               Kategori Lengkap
@@ -490,10 +510,10 @@ export default function ProductsPage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Comparison Table Section */}
-        <section className="py-16 sm:py-20 md:py-28">
+        {/* <section className="py-16 sm:py-20 md:py-28">
           <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
               Perbandingan Produk Unggulan
@@ -566,7 +586,7 @@ export default function ProductsPage() {
               </table>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* CTA Section */}
         <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary to-secondary">

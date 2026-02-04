@@ -23,7 +23,7 @@ export function Header() {
         z-40 w-full transition-all duration-300
         ${
           isScrolled
-            ? "sticky top-0 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+            ? "sticky top-0 shadow-md bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
             : "absolute top-0 bg-transparent border-transparent"
         }
       `}
@@ -32,8 +32,8 @@ export function Header() {
         <div className="flex items-center gap-2">
           <img src="/images/logo.png" className="w-10 h-10" />
           <div className="hidden sm:flex flex-col">
-            <span className="font-bold text-foreground leading-none">BFS</span>
-            <span className="text-xs text-muted-foreground">Healthcare</span>
+            <span className="font-bold  leading-none text-primary">BFS</span>
+            <span className="text-xs text-primary">Healthcare</span>
           </div>
         </div>
 
@@ -42,21 +42,21 @@ export function Header() {
             href="#Home"
             className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            Home
+            Beranda
           </Link>
 
           <Link
             href="#about"
             className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            About
+            Tetang Kami
           </Link>
 
           <Menu as="div" className="relative">
             <MenuButton className="text-sm hover:cursor-pointer font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1">
               {({ open }) => (
                 <>
-                  Solutions
+                  Solusi
                   <ChevronDown
                     className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
                   />
@@ -83,7 +83,7 @@ export function Header() {
                   </Link>
                 )}
               </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 {({ active }) => (
                   <Link
                     href="/iot-solutions"
@@ -97,7 +97,7 @@ export function Header() {
                     </span>
                   </Link>
                 )}
-              </MenuItem>
+              </MenuItem> */}
             </MenuItems>
           </Menu>
 
@@ -105,14 +105,14 @@ export function Header() {
             href="#products"
             className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            Products
+            Produk
           </Link>
 
           <Link
             href="#contact"
             className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            Contact
+            Hubungi Kami
           </Link>
         </nav>
 

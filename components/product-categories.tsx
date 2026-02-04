@@ -1,33 +1,41 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const categories = [
   {
-    id: 'nursing',
-    title: 'Nursing Chapter',
-    description: 'Peralatan kesehatan untuk keperawatan pasien dengan standar internasional',
-    color: 'from-blue-500 to-blue-600',
-    icon: '🏥',
+    id: "nursing",
+    title: "Nursing Chapter",
+    description:
+      "Peralatan kesehatan untuk keperawatan pasien dengan standar internasional",
+    color: "from-blue-500 to-blue-600",
+    icon: "🏥",
   },
   {
-    id: 'operating',
-    title: 'Operating Theatre',
-    description: 'Solusi lengkap ruang operasi modern dengan teknologi terkini',
-    color: 'from-cyan-500 to-cyan-600',
-    icon: '⚕️',
+    id: "operating",
+    title: "Operating Chapter",
+    description: "Solusi lengkap ruang operasi modern dengan teknologi terkini",
+    color: "from-cyan-500 to-cyan-600",
+    icon: "⚕️",
   },
   {
-    id: 'emergency',
-    title: 'Emergency Chapter',
-    description: 'Peralatan gawat darurat untuk respon cepat dan efektif',
-    color: 'from-indigo-500 to-indigo-600',
-    icon: '🚑',
+    id: "emergency",
+    title: "Emergency Chapter",
+    description: "Peralatan gawat darurat untuk respon cepat dan efektif",
+    color: "from-indigo-500 to-indigo-600",
+    icon: "🚑",
   },
   {
-    id: 'support',
-    title: 'Support Chapter',
-    description: 'Sistem dukungan dan alat pendukung untuk operasional fasilitas kesehatan',
-    color: 'from-violet-500 to-violet-600',
-    icon: '🔧',
+    id: "support",
+    title: "Support Chapter",
+    description:
+      "Sistem dukungan dan alat pendukung untuk operasional fasilitas kesehatan",
+    color: "from-violet-500 to-violet-600",
+    icon: "🔧",
   },
 ];
 
@@ -52,8 +60,10 @@ export function ProductCategories() {
               key={category.id}
               className="group relative overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-lg"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
-              
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity`}
+              />
+
               <CardHeader className="relative">
                 <div className="text-4xl mb-3">{category.icon}</div>
                 <CardTitle className="text-lg text-foreground group-hover:text-primary transition-colors">
