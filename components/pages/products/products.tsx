@@ -9,10 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, Search, Filter, Check } from "lucide-react";
+import {
+  ArrowRight,
+  Search,
+  Filter,
+  Check,
+  FilterIcon,
+  Box,
+} from "lucide-react";
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { allProductsKatalog } from "@/data/products";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 // import Loading from "./loading";
 
 const productCategories = [
@@ -211,23 +221,60 @@ const allProducts = [
   },
 ];
 
+const listCategory = [
+  {
+    label: "Emergency Chapter",
+  },
+  {
+    label: "Operating Chapter",
+  },
+  {
+    label: "Support Chapter",
+  },
+  {
+    label: "Nursing Chapter",
+  },
+];
+
 const featuredProducts = allProducts.filter((product) => product.featured);
 
 export default function ProductsPage() {
+  const [selectedSubCat, setSelectedSubCat] = useState<string[]>([]);
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const searchParams = useSearchParams();
+  console.log(selectedSubCat);
+
+  const availableSubCategories = useMemo(() => {
+    const filtered = selectedCategory
+      ? allProductsKatalog.filter((p) => p.category === selectedCategory)
+      : allProductsKatalog;
+
+    return Array.from(new Set(filtered.map((p) => p.subCategory)));
+  }, [selectedCategory]);
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((product) => {
-      const matchesCategory =
-        !selectedCategory || product.categoryId === selectedCategory;
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+    return allProductsKatalog.filter((product) => {
+      const matchCategory =
+        !selectedCategory || product.category === selectedCategory;
+
+      const matchSubCategory =
+        selectedSubCat.length === 0 ||
+        selectedSubCat.includes(product.subCategory);
+
+      const matchSearch = product.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      return matchCategory && matchSubCategory && matchSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, selectedSubCat, searchQuery]);
+
+  const handleCheckboxChange = (value: string, checked: boolean) => {
+    setSelectedSubCat((prev) =>
+      checked ? [...prev, value] : prev.filter((v) => v !== value),
+    );
+  };
 
   return (
     <>
@@ -242,12 +289,10 @@ export default function ProductsPage() {
               <div className="flex items-center gap-2">
                 <img src="/images/logo.png" className="w-10 h-10" />
                 <div className="hidden sm:flex flex-col">
-                  <span className="font-bold text-foreground leading-none">
+                  <span className="font-bold text-primary leading-none">
                     BFS
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    Healthcare
-                  </span>
+                  <span className="text-xs text-primary">Healthcare</span>
                 </div>
               </div>
             </Link>
@@ -262,334 +307,160 @@ export default function ProductsPage() {
           </div>
         </header>
 
-        {/* Hero Section */}
-        <section className="py-12 sm:py-16 md:py-20 bg-white">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-              Katalog Produk Lengkap
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Jelajahi rangkaian peralatan kesehatan berkualitas tinggi untuk
-              setiap kebutuhan fasilitas kesehatan Anda
-            </p>
-          </div>
-        </section>
+        <section>
+          <div className="container mx-auto max-w-6xl mt-10">
+            {/* Hero Section */}
+            <div className="mb-5 flex flex-row justify-between">
+              <h2 className="text-4xl font-medium text-gray-800">
+                Katalog Produk
+              </h2>
 
-        {/* Search & Filter Section */}
-        <section className="py-12 sm:py-16 md:py-20 border-b border-border bg-white">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="space-y-6">
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Cari produk, fitur, atau spesifikasi..."
+              <div className="relative max-w-xs">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  className="pl-9"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  placeholder="Cari Produk"
                 />
               </div>
+            </div>
 
-              {/* Category Filters */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-semibold text-foreground">
-                    Filter Kategori
-                  </span>
+            {/* Content */}
+            <div className="grid grid-cols-4 gap-4">
+              {/* filter */}
+              <div className="sticky top-24 self-start">
+                <div className="border rounded-xl">
+                  <div className="px-4 py-3 bg-gray-100 rounded-t-xl flex justify-between items-center">
+                    <div className="flex flex-row gap-2 items-center">
+                      <FilterIcon className="text-primary h-5 w-5" />
+                      <h2 className="text-xs font-semibold">Filter</h2>
+                    </div>
+                    {selectedSubCat.length > 0 || searchQuery ? (
+                      <button
+                        className="text-xs font-medium hover:cursor-pointer"
+                        onClick={() => {
+                          setSelectedSubCat([]);
+                          setSelectedCategory(null);
+                          setSearchQuery("");
+                        }}
+                      >
+                        Reset
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+
+                  <div className="px-4 py-3 max-h-[calc(100vh-300px)] overflow-y-auto">
+                    {availableSubCategories.map((sub) => (
+                      <div key={sub} className="flex mb-2 items-center gap-3">
+                        <Checkbox
+                          id={sub}
+                          checked={selectedSubCat.includes(sub)}
+                          onCheckedChange={(checked) =>
+                            setSelectedSubCat((prev) =>
+                              checked
+                                ? [...prev, sub]
+                                : prev.filter((v) => v !== sub),
+                            )
+                          }
+                        />
+                        <label htmlFor={sub} className="text-sm cursor-pointer">
+                          {sub}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              </div>
+              <div className="col-span-3 flex flex-col gap-3">
                 <div className="flex flex-wrap gap-2">
                   <Button
-                    variant={selectedCategory === null ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(null)}
-                    className="bg-transparent"
+                    variant={!selectedCategory ? "default" : "outline"}
+                    className={`rounded-xl hover:cursor-pointer ${selectedCategory ? "hover:bg-primary" : "hover:bg-teal-700"}`}
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setSelectedSubCat([]);
+                    }}
                   >
-                    Semua Produk
+                    All
                   </Button>
-                  {productCategories.map((category) => (
+
+                  {listCategory.map((cat) => (
                     <Button
-                      key={category.id}
+                      key={cat.label}
+                      className={`rounded-xl hover:cursor-pointer ${selectedCategory !== cat.label ? "hover:bg-primary" : "hover:bg-teal-700"}`}
                       variant={
-                        selectedCategory === category.id ? "default" : "outline"
+                        selectedCategory === cat.label ? "default" : "outline"
                       }
-                      size="sm"
-                      onClick={() => setSelectedCategory(category.id)}
-                      className="bg-transparent"
+                      onClick={() => {
+                        setSelectedCategory(cat.label);
+                        setSelectedSubCat([]); // reset sub category
+                      }}
                     >
-                      {category.title}
+                      {cat.label}
                     </Button>
                   ))}
                 </div>
-              </div>
-
-              {/* Results counter */}
-              <div className="text-sm text-muted-foreground">
-                Ditemukan{" "}
-                <span className="font-semibold text-foreground">
-                  {filteredProducts.length}
-                </span>{" "}
-                produk
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Featured Products */}
-        <section className="py-16 sm:py-20 md:py-28">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            {filteredProducts.length > 0 ? (
-              <>
-                <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
-                  {selectedCategory
-                    ? productCategories.find((c) => c.id === selectedCategory)
-                        ?.title
-                    : "Katalog Produk"}
-                </h2>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {allProductsKatalog.map((product, index) => (
-                    <div
-                      key={index}
-                      className="bg-gray-50 rounded-2xl flex flex-col h-96 p-6"
-                    >
-                      <div />
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-50 rounded-2xl flex flex-col h-96 p-6"
+                      >
+                        <div />
 
-                      <div className="flex items-center justify-center flex-1">
-                        <img className="h-60" src={product.image} />
-                        {/* <div className="text-9xl">{product.image}</div> */}
+                        <div className="flex items-center justify-center flex-1">
+                          <img className="h-60" src={product.image} />
+                          {/* <div className="text-9xl">{product.image}</div> */}
+                        </div>
+
+                        <div className="mt-auto text-start">
+                          <p className="text-xs text-primary font-medium">
+                            {product.subCategory}
+                          </p>
+                          <h2 className="text-md font-semibold">
+                            {product.name}
+                          </h2>
+                        </div>
                       </div>
-
-                      <div className="mt-auto text-start">
-                        <p className="text-xs text-primary font-medium">
-                          {product.subCategory}
-                        </p>
-                        <h2 className="text-md font-semibold">
-                          {product.name}
+                    ))
+                  ) : (
+                    <div className="text-center  py-12 col-span-3">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="border p-2 rounded-lg inline-flex">
+                          <Box className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                        <h2 className="text-lg font-semibold">
+                          Produk Tidak Ditemukan
                         </h2>
+                        <p className="text-muted-foreground mb-4 text-sm">
+                          Tidak ada produk yang cocok dengan pencarian Anda.
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setSearchQuery("");
+                            setSelectedCategory(null);
+                          }}
+                          className="bg-transparent hover:bg-teal-700 hover:cursor-pointer"
+                        >
+                          Reset Filter
+                        </Button>
                       </div>
                     </div>
-
-                    // <Card
-                    //   key={index}
-                    //   className="overflow-hidden hover:shadow-xl transition-all duration-300 border-border group flex flex-col"
-                    // >
-                    //   <div className="bg-gradient-to-br from-primary/10 to-secondary/10 h-40 flex items-center justify-center relative overflow-hidden">
-                    //     <span className="text-6xl">{product.image}</span>
-                    //     {product.featured && (
-                    //       <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                    //         Unggulan
-                    //       </div>
-                    //     )}
-                    //   </div>
-
-                    //   <CardHeader className="flex-grow">
-                    //     <div className="text-xs font-medium text-primary mb-2 uppercase tracking-wide">
-                    //       {product.category}
-                    //     </div>
-                    //     <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                    //       {product.name}
-                    //     </CardTitle>
-                    //     <CardDescription className="text-sm mt-2">
-                    //       {product.description}
-                    //     </CardDescription>
-                    //   </CardHeader>
-
-                    //   <CardContent className="space-y-4 pt-0">
-                    //     <div>
-                    //       <h4 className="font-semibold text-foreground mb-2 text-sm">
-                    //         Fitur:
-                    //       </h4>
-                    //       <ul className="space-y-1">
-                    //         {product.features
-                    //           .slice(0, 3)
-                    //           .map((feature, idx) => (
-                    //             <li
-                    //               key={idx}
-                    //               className="flex items-start gap-2 text-xs text-muted-foreground"
-                    //             >
-                    //               <Check className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
-                    //               {feature}
-                    //             </li>
-                    //           ))}
-                    //       </ul>
-                    //     </div>
-
-                    //     <Button className="w-full bg-primary hover:bg-secondary text-primary-foreground">
-                    //       Hubungi Sales
-                    //       <ArrowRight className="ml-2 h-4 w-4" />
-                    //     </Button>
-                    //   </CardContent>
-                    // </Card>
-                  ))}
+                  )}
                 </div>
-              </>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  Tidak ada produk yang cocok dengan pencarian Anda.
-                </p>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory(null);
-                  }}
-                  className="bg-transparent"
-                >
-                  Reset Filter
-                </Button>
               </div>
-            )}
+            </div>
           </div>
         </section>
 
-        {/* Product Categories Overview */}
-        {/* <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary/5 to-secondary/5">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
-              Kategori Lengkap
-            </h2>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {productCategories.map((category) => (
-                <Card
-                  key={category.id}
-                  className="group relative overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-lg"
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity`}
-                  />
-
-                  <CardHeader className="relative">
-                    <div className="text-5xl mb-4">{category.icon}</div>
-                    <CardTitle className="text-2xl text-foreground group-hover:text-primary transition-colors mb-2">
-                      {category.title}
-                    </CardTitle>
-                    <CardDescription className="text-base text-muted-foreground">
-                      {category.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="relative">
-                    <div className="mb-4">
-                      <p className="text-sm text-muted-foreground/80 mb-4">
-                        {category.details}
-                      </p>
-                      <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-2">
-                          Keuntungan:
-                        </h4>
-                        <ul className="space-y-1">
-                          {category.benefits.map((benefit, idx) => (
-                            <li
-                              key={idx}
-                              className="flex items-center gap-2 text-sm text-muted-foreground"
-                            >
-                              <Check className="h-3.5 w-3.5 text-primary" />
-                              {benefit}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full bg-transparent group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all"
-                      onClick={() => setSelectedCategory(category.id)}
-                    >
-                      Lihat Produk
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </CardContent>
-
-                  <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-secondary w-0 group-hover:w-full transition-all duration-300" />
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section> */}
-
-        {/* Comparison Table Section */}
-        {/* <section className="py-16 sm:py-20 md:py-28">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
-              Perbandingan Produk Unggulan
-            </h2>
-
-            <div className="overflow-x-auto border border-border rounded-lg">
-              <table className="w-full">
-                <thead className="bg-primary/5 border-b border-border">
-                  <tr>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Produk
-                    </th>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Kategori
-                    </th>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Fitur Utama
-                    </th>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Spesifikasi
-                    </th>
-                    <th className="px-6 py-4 text-center font-semibold text-foreground">
-                      Aksi
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.slice(0, 6).map((product, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-border hover:bg-primary/3 transition-colors"
-                    >
-                      <td className="px-6 py-4 font-medium text-foreground">
-                        {product.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {product.category}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div className="flex flex-wrap gap-1">
-                          {product.features.slice(0, 2).map((feat, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center px-2 py-1 bg-primary/10 text-primary text-xs rounded"
-                            >
-                              {feat}
-                            </span>
-                          ))}
-                          {product.features.length > 2 && (
-                            <span className="text-xs text-muted-foreground">
-                              +{product.features.length - 2}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {product.specifications[0]}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <Button
-                          size="sm"
-                          className="bg-primary hover:bg-secondary text-primary-foreground"
-                        >
-                          Info
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section> */}
-
         {/* CTA Section */}
-        <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary to-secondary">
+        {/* <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary to-secondary">
           <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-4">
               Siap Meningkatkan Fasilitas Kesehatan Anda?
@@ -615,7 +486,7 @@ export default function ProductsPage() {
               </Button>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
     </>
   );
