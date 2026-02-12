@@ -1,618 +1,233 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ArrowRight, Search, Filter, Check } from "lucide-react";
+import { Search, FilterIcon, Box } from "lucide-react";
 import { useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import { allProductsKatalog } from "@/data/products";
-// import Loading from "./loading";
-
-const productCategories = [
-  {
-    id: "nursing",
-    title: "Nursing Chapter",
-    description:
-      "Peralatan kesehatan untuk keperawatan pasien dengan standar internasional",
-    details:
-      "Kami menyediakan rangkaian lengkap peralatan nursing yang dirancang untuk meningkatkan kualitas perawatan pasien. Setiap produk telah melalui standar kontrol kualitas internasional dan disesuaikan dengan kebutuhan fasilitas kesehatan Indonesia.",
-    color: "from-blue-500 to-blue-600",
-    icon: "🏥",
-    benefits: [
-      "Perawatan pasien berkualitas",
-      "Standard internasional",
-      "Monitoring vital signs",
-      "Comfort pasien maksimal",
-    ],
-  },
-  {
-    id: "operating",
-    title: "Operating Theatre",
-    description: "Solusi lengkap ruang operasi modern dengan teknologi terkini",
-    details:
-      "Dengan teknologi terdepan, kami menyediakan solusi ruang operasi yang komprehensif. Dari peralatan bedah hingga sistem sterilisasi, semua dirancang untuk efisiensi maksimal dan keselamatan pasien.",
-    color: "from-cyan-500 to-cyan-600",
-    icon: "⚕️",
-    benefits: [
-      "Sterilisasi sempurna",
-      "Imaging terintegrasi",
-      "Efisiensi operasi",
-      "Safety protocols",
-    ],
-  },
-  {
-    id: "emergency",
-    title: "Emergency Chapter (EGD)",
-    description: "Peralatan gawat darurat untuk respon cepat dan efektif",
-    details:
-      "Sistem peralatan gawat darurat kami memastikan respon cepat dalam situasi kritis. Dirancang untuk ketahanan dan reliabilitas tinggi dengan dukungan teknis 24/7.",
-    color: "from-indigo-500 to-indigo-600",
-    icon: "🚑",
-    benefits: [
-      "Respon cepat",
-      "Ketahanan tinggi",
-      "Support 24/7",
-      "Reliabilitas maksimal",
-    ],
-  },
-  {
-    id: "support",
-    title: "Support Chapter",
-    description:
-      "Sistem dukungan dan alat pendukung untuk operasional fasilitas kesehatan",
-    details:
-      "Peralatan pendukung operasional fasilitas kesehatan mencakup sistem sterilisasi, manajemen limbah medis, dan solusi infrastruktur kesehatan lainnya.",
-    color: "from-violet-500 to-violet-600",
-    icon: "🔧",
-    benefits: [
-      "Sterilisasi limbah",
-      "Manajemen inventory",
-      "Efisiensi operasional",
-      "Compliance standar",
-    ],
-  },
-];
-
-const allProducts = [
-  {
-    name: "Autoclave Sterilizer Pro",
-    category: "Operating Theatre",
-    categoryId: "operating",
-    description:
-      "Sistem sterilisasi berteknologi tinggi untuk sterilisasi instrumen medis",
-    features: [
-      "Kapasitas 100L",
-      "Siklus 45 menit",
-      "Hemat energi 30%",
-      "Monitoring digital",
-    ],
-    specifications: [
-      "Suhu max 135°C",
-      "Pressure 3 bar",
-      "Auto-shutdown",
-      "IP67 rating",
-    ],
-    price: "Custom Quote",
-    featured: true,
-    image: "🔬",
-  },
-  {
-    name: "Modular Operating Theatre",
-    category: "Operating Theatre",
-    categoryId: "operating",
-    description:
-      "Ruang operasi modular yang dapat disesuaikan dengan kebutuhan fasilitas",
-    features: [
-      "Desain modular fleksibel",
-      "Ventilasi superior",
-      "Imaging terintegrasi",
-      "ISO 14644 Class 6",
-    ],
-    specifications: [
-      "Ukuran custom",
-      "Tekanan positif",
-      "LED lighting system",
-      "Equipment integration",
-    ],
-    price: "Custom Quote",
-    featured: true,
-    image: "🏗️",
-  },
-  {
-    name: "Patient Monitor Series",
-    category: "Nursing Chapter",
-    categoryId: "nursing",
-    description: "Monitor pasien multi-parameter untuk continuous monitoring",
-    features: [
-      "ECG monitoring",
-      "SpO2 tracking",
-      "Temperature sensor",
-      "Wireless connectivity",
-    ],
-    specifications: [
-      "12-inch display",
-      "Battery 8 hours",
-      "Data logging",
-      "Alarm system",
-    ],
-    price: "Custom Quote",
-    featured: false,
-    image: "💓",
-  },
-  {
-    name: "Emergency Response Cart",
-    category: "Emergency Chapter (EGD)",
-    categoryId: "emergency",
-    description: "Keranjang darurat lengkap dengan peralatan resusitasi",
-    features: [
-      "Fully equipped",
-      "Mobile & portable",
-      "Organized drawers",
-      "Defibrillator ready",
-    ],
-    specifications: [
-      "Steel construction",
-      "Locking wheels",
-      "Compact design",
-      "Drug compartment",
-    ],
-    price: "Custom Quote",
-    featured: false,
-    image: "🚨",
-  },
-  {
-    name: "Waste Management System",
-    category: "Support Chapter",
-    categoryId: "support",
-    description: "Sistem manajemen limbah medis terintegrasi",
-    features: [
-      "Segregation containers",
-      "Tracking system",
-      "Compliance reports",
-      "Space efficient",
-    ],
-    specifications: [
-      "Kapasitas 240L",
-      "Color-coded",
-      "Bio-hazard compliant",
-      "Easy disposal",
-    ],
-    price: "Custom Quote",
-    featured: false,
-    image: "♻️",
-  },
-  {
-    name: "Surgical Light Systems",
-    category: "Operating Theatre",
-    categoryId: "operating",
-    description: "Sistem pencahayaan bedah berteknologi LED",
-    features: [
-      "LED technology",
-      "Shadow-free",
-      "Adjustable intensity",
-      "Long lifespan",
-    ],
-    specifications: [
-      "Color temp 4000K",
-      "Illumination 160000 lux",
-      "Arm length 120cm",
-      "Ergonomic design",
-    ],
-    price: "Custom Quote",
-    featured: false,
-    image: "💡",
-  },
-];
-
-const featuredProducts = allProducts.filter((product) => product.featured);
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Header } from "@/components/ui/header";
 
 export default function ProductsPage() {
+  const [selectedSubCat, setSelectedSubCat] = useState<string[]>([]);
+  const [showAllSub, setShowAllSub] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const searchParams = useSearchParams();
+  console.log(selectedSubCat);
+
+  const listCategory = [
+    ...new Set(allProductsKatalog.map((product) => product.category)),
+  ].map((category) => ({ label: category }));
+
+  const availableSubCategories = useMemo(() => {
+    const filtered = selectedCategory
+      ? allProductsKatalog.filter((p) => p.category === selectedCategory)
+      : allProductsKatalog;
+
+    return Array.from(new Set(filtered.map((p) => p.subCategory)));
+  }, [selectedCategory]);
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((product) => {
-      const matchesCategory =
-        !selectedCategory || product.categoryId === selectedCategory;
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+    return allProductsKatalog.filter((product) => {
+      const matchCategory =
+        !selectedCategory || product.category === selectedCategory;
+
+      const matchSubCategory =
+        selectedSubCat.length === 0 ||
+        selectedSubCat.includes(product.subCategory);
+
+      const matchSearch = product.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      return matchCategory && matchSubCategory && matchSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, selectedSubCat, searchQuery]);
 
   return (
     <>
       <main className="min-h-screen bg-white">
-        {/* Header Navigation */}
-        <header className="sticky top-0 z-40 shadow-md bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <Link
-              href="/"
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-            >
-              <div className="flex items-center gap-2">
-                <img src="/images/logo.png" className="w-10 h-10" />
-                <div className="hidden sm:flex flex-col">
-                  <span className="font-bold text-foreground leading-none">
-                    BFS
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    Healthcare
-                  </span>
-                </div>
-              </div>
-            </Link>
-            <nav className="hidden md:flex gap-8 items-center">
-              <Link
-                href={"/"}
-                className="text-sm font-medium bg-primary py-2 px-5 rounded-xl text-white"
-              >
-                Kembali ke Beranda
-              </Link>
-            </nav>
-          </div>
-        </header>
+        <Header />
 
-        {/* Hero Section */}
-        <section className="py-12 sm:py-16 md:py-20 bg-white">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-              Katalog Produk Lengkap
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Jelajahi rangkaian peralatan kesehatan berkualitas tinggi untuk
-              setiap kebutuhan fasilitas kesehatan Anda
-            </p>
-          </div>
-        </section>
+        <section>
+          <div className="container mx-auto max-w-6xl mt-15 px-4 sm:px-6">
+            {/* Hero Section */}
 
-        {/* Search & Filter Section */}
-        <section className="py-12 sm:py-16 md:py-20 border-b border-border bg-white">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="space-y-6">
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Cari produk, fitur, atau spesifikasi..."
+            <div className="mb-15 flex flex-col sm:flex-row justify-between gap-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800 text-center sm:text-left">
+                Katalog Produk
+              </h2>
+
+              <div className="relative w-full sm:max-w-xs">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  className="pl-9 w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  placeholder="Cari Produk"
                 />
               </div>
-
-              {/* Category Filters */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-semibold text-foreground">
-                    Filter Kategori
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant={selectedCategory === null ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(null)}
-                    className="bg-transparent"
-                  >
-                    Semua Produk
-                  </Button>
-                  {productCategories.map((category) => (
-                    <Button
-                      key={category.id}
-                      variant={
-                        selectedCategory === category.id ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => setSelectedCategory(category.id)}
-                      className="bg-transparent"
-                    >
-                      {category.title}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Results counter */}
-              <div className="text-sm text-muted-foreground">
-                Ditemukan{" "}
-                <span className="font-semibold text-foreground">
-                  {filteredProducts.length}
-                </span>{" "}
-                produk
-              </div>
             </div>
-          </div>
-        </section>
 
-        {/* Featured Products */}
-        <section className="py-16 sm:py-20 md:py-28">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            {filteredProducts.length > 0 ? (
-              <>
-                <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
-                  {selectedCategory
-                    ? productCategories.find((c) => c.id === selectedCategory)
-                        ?.title
-                    : "Katalog Produk"}
-                </h2>
-
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {allProductsKatalog.map((product, index) => (
-                    <div
-                      key={index}
-                      className="bg-gray-50 rounded-2xl flex flex-col h-96 p-6"
-                    >
-                      <div />
-
-                      <div className="flex items-center justify-center flex-1">
-                        <img className="h-60" src={product.image} />
-                        {/* <div className="text-9xl">{product.image}</div> */}
-                      </div>
-
-                      <div className="mt-auto text-start">
-                        <p className="text-xs text-primary font-medium">
-                          {product.subCategory}
-                        </p>
-                        <h2 className="text-md font-semibold">
-                          {product.name}
-                        </h2>
-                      </div>
+            {/* Content */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
+              {/* Filter - Mobile Collapsible */}
+              <div className="lg:sticky lg:top-24 self-start order-2 lg:order-1">
+                <div className="border rounded-xl">
+                  <div className="px-4 py-3 bg-gray-100 rounded-t-xl flex justify-between items-center">
+                    <div className="flex flex-row gap-2 items-center">
+                      <FilterIcon className="text-primary h-5 w-5" />
+                      <h2 className="text-sm font-semibold">Filter</h2>
                     </div>
-
-                    // <Card
-                    //   key={index}
-                    //   className="overflow-hidden hover:shadow-xl transition-all duration-300 border-border group flex flex-col"
-                    // >
-                    //   <div className="bg-gradient-to-br from-primary/10 to-secondary/10 h-40 flex items-center justify-center relative overflow-hidden">
-                    //     <span className="text-6xl">{product.image}</span>
-                    //     {product.featured && (
-                    //       <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                    //         Unggulan
-                    //       </div>
-                    //     )}
-                    //   </div>
-
-                    //   <CardHeader className="flex-grow">
-                    //     <div className="text-xs font-medium text-primary mb-2 uppercase tracking-wide">
-                    //       {product.category}
-                    //     </div>
-                    //     <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                    //       {product.name}
-                    //     </CardTitle>
-                    //     <CardDescription className="text-sm mt-2">
-                    //       {product.description}
-                    //     </CardDescription>
-                    //   </CardHeader>
-
-                    //   <CardContent className="space-y-4 pt-0">
-                    //     <div>
-                    //       <h4 className="font-semibold text-foreground mb-2 text-sm">
-                    //         Fitur:
-                    //       </h4>
-                    //       <ul className="space-y-1">
-                    //         {product.features
-                    //           .slice(0, 3)
-                    //           .map((feature, idx) => (
-                    //             <li
-                    //               key={idx}
-                    //               className="flex items-start gap-2 text-xs text-muted-foreground"
-                    //             >
-                    //               <Check className="h-3.5 w-3.5 text-primary flex-shrink-0 mt-0.5" />
-                    //               {feature}
-                    //             </li>
-                    //           ))}
-                    //       </ul>
-                    //     </div>
-
-                    //     <Button className="w-full bg-primary hover:bg-secondary text-primary-foreground">
-                    //       Hubungi Sales
-                    //       <ArrowRight className="ml-2 h-4 w-4" />
-                    //     </Button>
-                    //   </CardContent>
-                    // </Card>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  Tidak ada produk yang cocok dengan pencarian Anda.
-                </p>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory(null);
-                  }}
-                  className="bg-transparent"
-                >
-                  Reset Filter
-                </Button>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Product Categories Overview */}
-        {/* <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary/5 to-secondary/5">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
-              Kategori Lengkap
-            </h2>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {productCategories.map((category) => (
-                <Card
-                  key={category.id}
-                  className="group relative overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-lg"
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity`}
-                  />
-
-                  <CardHeader className="relative">
-                    <div className="text-5xl mb-4">{category.icon}</div>
-                    <CardTitle className="text-2xl text-foreground group-hover:text-primary transition-colors mb-2">
-                      {category.title}
-                    </CardTitle>
-                    <CardDescription className="text-base text-muted-foreground">
-                      {category.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="relative">
-                    <div className="mb-4">
-                      <p className="text-sm text-muted-foreground/80 mb-4">
-                        {category.details}
-                      </p>
-                      <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-2">
-                          Keuntungan:
-                        </h4>
-                        <ul className="space-y-1">
-                          {category.benefits.map((benefit, idx) => (
-                            <li
-                              key={idx}
-                              className="flex items-center gap-2 text-sm text-muted-foreground"
-                            >
-                              <Check className="h-3.5 w-3.5 text-primary" />
-                              {benefit}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full bg-transparent group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all"
-                      onClick={() => setSelectedCategory(category.id)}
-                    >
-                      Lihat Produk
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </CardContent>
-
-                  <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-secondary w-0 group-hover:w-full transition-all duration-300" />
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section> */}
-
-        {/* Comparison Table Section */}
-        {/* <section className="py-16 sm:py-20 md:py-28">
-          <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-12 text-center">
-              Perbandingan Produk Unggulan
-            </h2>
-
-            <div className="overflow-x-auto border border-border rounded-lg">
-              <table className="w-full">
-                <thead className="bg-primary/5 border-b border-border">
-                  <tr>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Produk
-                    </th>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Kategori
-                    </th>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Fitur Utama
-                    </th>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">
-                      Spesifikasi
-                    </th>
-                    <th className="px-6 py-4 text-center font-semibold text-foreground">
-                      Aksi
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.slice(0, 6).map((product, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-border hover:bg-primary/3 transition-colors"
-                    >
-                      <td className="px-6 py-4 font-medium text-foreground">
-                        {product.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {product.category}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div className="flex flex-wrap gap-1">
-                          {product.features.slice(0, 2).map((feat, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center px-2 py-1 bg-primary/10 text-primary text-xs rounded"
-                            >
-                              {feat}
-                            </span>
-                          ))}
-                          {product.features.length > 2 && (
-                            <span className="text-xs text-muted-foreground">
-                              +{product.features.length - 2}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {product.specifications[0]}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <Button
-                          size="sm"
-                          className="bg-primary hover:bg-secondary text-primary-foreground"
+                    <div className="flex items-center gap-2">
+                      {selectedSubCat.length > 0 || searchQuery ? (
+                        <button
+                          className="text-sm font-medium hover:cursor-pointer text-primary"
+                          onClick={() => {
+                            setSelectedSubCat([]);
+                            setSelectedCategory(null);
+                            setSearchQuery("");
+                          }}
                         >
-                          Info
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section> */}
+                          Reset
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
 
-        {/* CTA Section */}
-        <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-primary to-secondary">
-          <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-4">
-              Siap Meningkatkan Fasilitas Kesehatan Anda?
-            </h2>
-            <p className="text-lg text-primary-foreground/90 mb-8">
-              Konsultasikan kebutuhan Anda dengan tim ahli kami dan dapatkan
-              solusi yang paling sesuai
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Button
-                size="lg"
-                className="bg-white hover:bg-gray-100 text-primary font-semibold"
-              >
-                Hubungi Sales Team
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
-              >
-                Request Brochure
-              </Button>
+                  <div className="px-4 py-3 max-h-[50vh] lg:max-h-[calc(100vh-300px)] overflow-y-auto">
+                    {availableSubCategories
+                      .slice(0, showAllSub ? availableSubCategories.length : 5)
+                      .map((sub) => (
+                        <div key={sub} className="flex mb-3 items-center gap-3">
+                          <Checkbox
+                            id={sub}
+                            checked={selectedSubCat.includes(sub)}
+                            onCheckedChange={(checked) =>
+                              setSelectedSubCat((prev) =>
+                                checked
+                                  ? [...prev, sub]
+                                  : prev.filter((v) => v !== sub),
+                              )
+                            }
+                          />
+                          <label
+                            htmlFor={sub}
+                            className="text-sm cursor-pointer"
+                          >
+                            {sub}
+                          </label>
+                        </div>
+                      ))}
+
+                    {availableSubCategories.length > 5 && (
+                      <button
+                        onClick={() => setShowAllSub(!showAllSub)}
+                        className="text-sm text-primary hover:text-primary/80 font-medium mt-2 flex items-center gap-1 transition-colors"
+                      >
+                        {showAllSub ? (
+                          <>
+                            <span className="hover:cursor-pointer">
+                              Tampilkan lebih sedikit
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="hover:cursor-pointer">
+                              Tampilkan {availableSubCategories.length - 5}{" "}
+                              lainnya
+                            </span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Products */}
+              <div className="col-span-1 lg:col-span-3 flex flex-col gap-4 lg:gap-6 order-1 lg:order-2">
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                  <Button
+                    variant={!selectedCategory ? "default" : "outline"}
+                    className={`rounded-xl hover:cursor-pointer text-sm sm:text-base ${selectedCategory ? "hover:bg-primary" : "hover:bg-teal-700"}`}
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setSelectedSubCat([]);
+                    }}
+                  >
+                    Semua
+                  </Button>
+
+                  {listCategory.map((cat) => (
+                    <Button
+                      key={cat.label}
+                      className={`rounded-xl hover:cursor-pointer text-sm sm:text-base ${selectedCategory !== cat.label ? "hover:bg-primary" : "hover:bg-teal-700"}`}
+                      variant={
+                        selectedCategory === cat.label ? "default" : "outline"
+                      }
+                      onClick={() => {
+                        setSelectedCategory(cat.label);
+                        setSelectedSubCat([]);
+                      }}
+                    >
+                      {cat.label}
+                    </Button>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-50 rounded-2xl flex flex-col h-auto sm:h-96 p-4 sm:p-6"
+                      >
+                        <div className="flex items-center justify-center flex-1 min-h-[200px] sm:min-h-[240px]">
+                          <img
+                            className="h-auto max-h-[180px] sm:max-h-[220px] w-auto max-w-full object-contain"
+                            src={product.image}
+                            alt={product.name}
+                          />
+                        </div>
+
+                        <div className="mt-4 sm:mt-auto text-start">
+                          <p className="text-xs text-primary font-medium">
+                            {product.subCategory}
+                          </p>
+                          <h2 className="text-sm sm:text-md font-semibold line-clamp-2">
+                            {product.name}
+                          </h2>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 sm:py-12 col-span-1 sm:col-span-2 lg:col-span-3">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="border p-2 rounded-lg inline-flex">
+                          <Box className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                        <h2 className="text-lg font-semibold">
+                          Produk Tidak Ditemukan
+                        </h2>
+                        <p className="text-muted-foreground mb-4 text-sm">
+                          Tidak ada produk yang cocok dengan pencarian Anda.
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setSearchQuery("");
+                            setSelectedCategory(null);
+                          }}
+                          className="bg-transparent hover:bg-teal-700 hover:cursor-pointer text-sm"
+                        >
+                          Reset Filter
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </section>

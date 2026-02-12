@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Aurora from "./react-bits/Aurora";
-import CountUp from "./ui/CountUp";
+import Aurora from "../react-bits/Aurora";
+import CountUp from "../ui/CountUp";
 
 export function HeroSection() {
   return (
