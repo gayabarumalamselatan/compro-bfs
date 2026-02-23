@@ -25,19 +25,19 @@ jobs:
         run: |
           docker push ghcr.io/${{ github.repository }}:latest
 
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-            docker pull ghcr.io/${{ github.repository }}:latest
-            docker stop ${{ secrets.APP_NAME }} || true
-            docker rm ${{ secrets.APP_NAME }} || true
-            docker run -d \
-              --name ${{ secrets.APP_NAME }} \
-              -p ${{ secrets.APP_PORT }}:3000 \
-              --restart always \
-              ghcr.io/${{ github.repository }}:latest
+      # - name: Deploy to Server via SSH
+      #   uses: appleboy/ssh-action@v1.0.3
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #       docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+      #       docker pull ghcr.io/${{ github.repository }}:latest
+      #       docker stop ${{ secrets.APP_NAME }} || true
+      #       docker rm ${{ secrets.APP_NAME }} || true
+      #       docker run -d \
+      #         --name ${{ secrets.APP_NAME }} \
+      #         -p ${{ secrets.APP_PORT }}:3000 \
+      #         --restart always \
+      #         ghcr.io/${{ github.repository }}:latest
