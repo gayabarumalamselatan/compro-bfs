@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: "BFS - Home",
   description:
     "Distributor resmi alat kesehatan berkualitas tinggi dengan inovasi teknologi medis untuk pelayanan kesehatan nasional. Nursing, Operating Theatre, Emergency Solutions.",
-  generator: "v0.app",
   viewport: {
     width: "device-width",
     initialScale: 1,
