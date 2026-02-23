@@ -50,7 +50,7 @@ export function AboutSection() {
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-12 mb-16 items-center">
           {/* Left - Text Content */}
-          <div className=" bg-gray-50 h-full px-10 flex flex-col items-center rounded-2xl">
+          <div className=" bg-gray-50 h-full px-10 py-4 flex flex-col items-center rounded-2xl">
             <div className="my-auto flex flex-col gap-9">
               <div>
                 <h3 className="text-primary text-xl font-bold mb-3">

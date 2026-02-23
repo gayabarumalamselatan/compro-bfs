@@ -16,23 +16,6 @@ export function ContactSection() {
 
         {/* Contact Info */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {/* Email */}
-          {/* <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
-            <CardHeader>
-              <div className="mb-3 group-hover:scale-110 transition-transform">
-                <Mail />
-              </div>
-              <CardTitle>Email</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <a
-                href="mailto:business@bfsbintanglima.com"
-                className="text-primary hover:text-secondary font-semibold break-all"
-              >
-                business@bfsbintanglima.com
-              </a>
-            </CardContent>
-          </Card> */}
           <div className="bg-gray-50 p-10 rounded-2xl flex flex-col gap-5">
             <Mail className="size-8 text-primary" />
             <div className="flex flex-col gap-3">
@@ -74,47 +57,6 @@ export function ContactSection() {
               </p>
             </div>
           </div>
-
-          {/* Website */}
-          {/* <Card className="border-border  hover:border-primary hover:shadow-lg transition-all duration-300 group">
-            <CardHeader>
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                <Globe />
-              </div>
-              <CardTitle>Website</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <a
-                href="https://bfsbintanglima.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-secondary font-semibold break-all"
-              >
-                bfsbintanglima.com
-              </a>
-            </CardContent>
-          </Card> */}
-
-          {/* Address */}
-          {/* <Card className="border-border hover:border-primary hover:shadow-lg transition-all duration-300 group">
-            <CardHeader>
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                <Pin />
-              </div>
-              <CardTitle>Alamat</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                AD Premier Office Park,
-                <br />
-                7th Floor, Suite 6<br />
-                Jalan TB. Simatupang No. 5<br />
-                Jakarta Selatan 12550
-                <br />
-                INDONESIA
-              </p>
-            </CardContent>
-          </Card> */}
         </div>
 
         {/* CTA Section */}

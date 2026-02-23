@@ -138,7 +138,7 @@ export function Header() {
           <div className="md:hidden absolute top-full inset-x-0 z-50 bg-background/95 backdrop-blur border-t border-border shadow-lg">
             <nav className="flex flex-col px-6 py-6 gap-5">
               <Link
-                href="#Home"
+                href="/#Home"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm font-medium"
               >
@@ -146,7 +146,7 @@ export function Header() {
               </Link>
 
               <Link
-                href="#about"
+                href="/#about"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm font-medium"
               >
@@ -162,7 +162,7 @@ export function Header() {
               </Link>
 
               <Link
-                href="#products"
+                href="/#products"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm font-medium"
               >
@@ -170,7 +170,7 @@ export function Header() {
               </Link>
 
               <Link
-                href="#contact"
+                href="/#contact"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm font-medium"
               >
