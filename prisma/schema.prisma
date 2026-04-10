@@ -1,0 +1,281 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../prisma/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model about_us {
+  id                            Int                             @id @default(autoincrement())
+  judul                         String                          @db.VarChar
+  konten                        String                          @db.VarChar
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  payload_locked_documents_rels payload_locked_documents_rels[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model category {
+  id                            Int                             @id @default(autoincrement())
+  kategori                      String                          @db.VarChar
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  payload_locked_documents_rels payload_locked_documents_rels[]
+  product                       product[]
+  sub_category                  sub_category[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model contact_us {
+  id                            Int                             @id @default(autoincrement())
+  judul                         String                          @db.VarChar
+  konten                        String                          @db.VarChar
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  payload_locked_documents_rels payload_locked_documents_rels[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model media {
+  id                            Int                             @id @default(autoincrement())
+  alt                           String                          @db.VarChar
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  url                           String?                         @db.VarChar
+  thumbnail_u_r_l               String?                         @db.VarChar
+  filename                      String?                         @unique(map: "media_filename_idx") @db.VarChar
+  mime_type                     String?                         @db.VarChar
+  filesize                      Decimal?                        @db.Decimal
+  width                         Decimal?                        @db.Decimal
+  height                        Decimal?                        @db.Decimal
+  focal_x                       Decimal?                        @db.Decimal
+  focal_y                       Decimal?                        @db.Decimal
+  payload_locked_documents_rels payload_locked_documents_rels[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model payload_kv {
+  id   Int    @id @default(autoincrement())
+  key  String @unique(map: "payload_kv_key_idx") @db.VarChar
+  data Json
+}
+
+model payload_locked_documents {
+  id                            Int                             @id @default(autoincrement())
+  global_slug                   String?                         @db.VarChar
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  payload_locked_documents_rels payload_locked_documents_rels[]
+
+  @@index([created_at])
+  @@index([global_slug])
+  @@index([updated_at])
+}
+
+model payload_locked_documents_rels {
+  id                       Int                      @id @default(autoincrement())
+  order                    Int?
+  parent_id                Int
+  path                     String                   @db.VarChar
+  users_id                 Int?
+  media_id                 Int?
+  about_us_id              Int?
+  category_id              Int?
+  sub_category_id          Int?
+  contact_us_id            Int?
+  product_id               Int?
+  product_media_id         Int?
+  featured_products_id     Int?
+  about_us                 about_us?                @relation(fields: [about_us_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_about_us_fk")
+  category                 category?                @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_category_fk")
+  contact_us               contact_us?              @relation(fields: [contact_us_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_contact_us_fk")
+  featured_products        featured_products?       @relation(fields: [featured_products_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_featured_products_fk")
+  media                    media?                   @relation(fields: [media_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_media_fk")
+  payload_locked_documents payload_locked_documents @relation(fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_parent_fk")
+  product                  product?                 @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_product_fk")
+  product_media            product_media?           @relation(fields: [product_media_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_product_media_fk")
+  sub_category             sub_category?            @relation(fields: [sub_category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_sub_category_fk")
+  users                    users?                   @relation(fields: [users_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_users_fk")
+
+  @@index([about_us_id])
+  @@index([category_id])
+  @@index([contact_us_id])
+  @@index([media_id])
+  @@index([order])
+  @@index([parent_id], map: "payload_locked_documents_rels_parent_idx")
+  @@index([path])
+  @@index([product_id])
+  @@index([product_media_id])
+  @@index([sub_category_id])
+  @@index([users_id])
+  @@index([featured_products_id])
+}
+
+model payload_migrations {
+  id         Int      @id @default(autoincrement())
+  name       String?  @db.VarChar
+  batch      Decimal? @db.Decimal
+  updated_at DateTime @default(now()) @db.Timestamptz(3)
+  created_at DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model payload_preferences {
+  id                       Int                        @id @default(autoincrement())
+  key                      String?                    @db.VarChar
+  value                    Json?
+  updated_at               DateTime                   @default(now()) @db.Timestamptz(3)
+  created_at               DateTime                   @default(now()) @db.Timestamptz(3)
+  payload_preferences_rels payload_preferences_rels[]
+
+  @@index([created_at])
+  @@index([key])
+  @@index([updated_at])
+}
+
+model payload_preferences_rels {
+  id                  Int                 @id @default(autoincrement())
+  order               Int?
+  parent_id           Int
+  path                String              @db.VarChar
+  users_id            Int?
+  payload_preferences payload_preferences @relation(fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_preferences_rels_parent_fk")
+  users               users?              @relation(fields: [users_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_preferences_rels_users_fk")
+
+  @@index([order])
+  @@index([parent_id], map: "payload_preferences_rels_parent_idx")
+  @@index([path])
+  @@index([users_id])
+}
+
+model product {
+  id                            Int                             @id @default(autoincrement())
+  nama                          String                          @db.VarChar
+  image_id                      Int
+  kategori_id                   Int
+  sub_kategori_id               Int?
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  featured_products_rels        featured_products_rels[]
+  payload_locked_documents_rels payload_locked_documents_rels[]
+  product_media                 product_media                   @relation(fields: [image_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "product_image_id_product_media_id_fk")
+  category                      category                        @relation(fields: [kategori_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "product_kategori_id_category_id_fk")
+  sub_category                  sub_category?                   @relation(fields: [sub_kategori_id], references: [id], onUpdate: NoAction, map: "product_sub_kategori_id_sub_category_id_fk")
+
+  @@index([created_at])
+  @@index([image_id], map: "product_image_idx")
+  @@index([kategori_id], map: "product_kategori_idx")
+  @@index([sub_kategori_id], map: "product_sub_kategori_idx")
+  @@index([updated_at])
+}
+
+model product_media {
+  id                            Int                             @id @default(autoincrement())
+  alt                           String?                         @db.VarChar
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  url                           String?                         @db.VarChar
+  thumbnail_u_r_l               String?                         @db.VarChar
+  filename                      String?                         @unique(map: "product_media_filename_idx") @db.VarChar
+  mime_type                     String?                         @db.VarChar
+  filesize                      Decimal?                        @db.Decimal
+  width                         Decimal?                        @db.Decimal
+  height                        Decimal?                        @db.Decimal
+  focal_x                       Decimal?                        @db.Decimal
+  focal_y                       Decimal?                        @db.Decimal
+  payload_locked_documents_rels payload_locked_documents_rels[]
+  product                       product[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model sub_category {
+  id                            Int                             @id @default(autoincrement())
+  sub_kategori                  String                          @db.VarChar
+  kategori_id                   Int
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  payload_locked_documents_rels payload_locked_documents_rels[]
+  product                       product[]
+  category                      category                        @relation(fields: [kategori_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "sub_category_kategori_id_category_id_fk")
+
+  @@index([created_at])
+  @@index([kategori_id], map: "sub_category_kategori_idx")
+  @@index([updated_at])
+}
+
+model users {
+  id                            Int                             @id @default(autoincrement())
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  email                         String                          @unique(map: "users_email_idx") @db.VarChar
+  reset_password_token          String?                         @db.VarChar
+  reset_password_expiration     DateTime?                       @db.Timestamptz(3)
+  salt                          String?                         @db.VarChar
+  hash                          String?                         @db.VarChar
+  login_attempts                Decimal?                        @default(0) @db.Decimal
+  lock_until                    DateTime?                       @db.Timestamptz(3)
+  role                          enum_users_role                 @default(editor)
+  payload_locked_documents_rels payload_locked_documents_rels[]
+  payload_preferences_rels      payload_preferences_rels[]
+  users_sessions                users_sessions[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model users_sessions {
+  order      Int       @map("_order")
+  parent_id  Int       @map("_parent_id")
+  id         String    @id @db.VarChar
+  created_at DateTime? @db.Timestamptz(3)
+  expires_at DateTime  @db.Timestamptz(3)
+  users      users     @relation(fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "users_sessions_parent_id_fk")
+
+  @@index([order], map: "users_sessions_order_idx")
+  @@index([parent_id], map: "users_sessions_parent_id_idx")
+}
+
+model featured_products {
+  id                            Int                             @id @default(autoincrement())
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(3)
+  featured_products_rels        featured_products_rels[]
+  payload_locked_documents_rels payload_locked_documents_rels[]
+
+  @@index([created_at])
+  @@index([updated_at])
+}
+
+model featured_products_rels {
+  id                Int               @id @default(autoincrement())
+  order             Int?
+  parent_id         Int
+  path              String            @db.VarChar
+  product_id        Int?
+  featured_products featured_products @relation(fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "featured_products_rels_parent_fk")
+  product           product?          @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "featured_products_rels_product_fk")
+
+  @@index([order])
+  @@index([parent_id], map: "featured_products_rels_parent_idx")
+  @@index([path])
+  @@index([product_id])
+}
+
+enum enum_users_role {
+  admin
+  editor
+}

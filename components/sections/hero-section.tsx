@@ -51,7 +51,7 @@ export function HeroSection() {
             <Link href="#products">
               <Button
                 size="lg"
-                className="bg-primary hover:bg-secondary hover:cursor-pointer text-primary-foreground w-full sm:w-auto rounded-xl"
+                className="bg-primary border-0 hover:bg-secondary hover:cursor-pointer text-primary-foreground w-full sm:w-auto rounded-xl"
               >
                 Eksplor Produk
               </Button>
@@ -60,7 +60,7 @@ export function HeroSection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto text-primary hover:text-primary hover:cursor-pointer hover:bg-gray-100 bg-background backdrop-blur rounded-xl"
+                className="w-full bg-transparent border-primary sm:w-auto text-primary hover:text-primary hover:cursor-pointer hover:bg-gray-100 font-semibold backdrop-blur rounded-xl"
               >
                 Hubungi Kami
               </Button>

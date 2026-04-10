@@ -1,7 +1,7 @@
 import { AboutSection } from "@/components/sections/about-section";
 import { ContactSection } from "@/components/sections/contact-section";
 import { HeroSection } from "@/components/sections/hero-section";
-import Produk from "@/components/sections/produk-unggulan";
+import Produk from "@/components/sections/productUnggulan/produkUnggulan";
 import { Footer } from "@/components/ui/footer";
 import { Header } from "@/components/ui/header";
 import { SplashScreen } from "@/components/ui/splash-screen";

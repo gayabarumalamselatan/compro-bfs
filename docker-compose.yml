@@ -1,0 +1,9 @@
+services:
+  payload:
+    image: ghcr.io/gayabarumalamselatan/compro-bfs:latest
+    container_name: compro-bfs
+    ports:
+      - "3000:3000"
+    volumes:
+      - /home/bfs/cms-bfs/media:/app/media:ro
+    restart: unless-stopped

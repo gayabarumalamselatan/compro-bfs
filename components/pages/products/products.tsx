@@ -2,44 +2,108 @@
 
 import { Button } from "@/components/ui/button";
 import { Search, FilterIcon, Box, ChevronDown, ChevronUp } from "lucide-react";
-import { useState, useMemo } from "react";
-import { allProductsKatalog } from "@/data/products";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/ui/header";
+import useProducts from "./useProduct";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ProductsPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_PATH_URL ?? "";
   const [selectedSubCat, setSelectedSubCat] = useState<string[]>([]);
   const [showAllSub, setShowAllSub] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
 
-  const listCategory = [
-    ...new Set(allProductsKatalog.map((product) => product.category)),
-  ].map((category) => ({ label: category }));
+  const {
+    products,
+    loadMoreRef,
+    productHasNextPage,
+    productIsError,
+    productIsLoading,
+    productFetchNextPage,
+    prodctIsFetchingNextPage,
+    subCategories,
+    subCategoriesIsError,
+    categories,
+    productIsFetching,
+  } = useProducts({
+    kategori: selectedCategory,
+    sub_kategori: selectedSubCat,
+    selectedCategory: selectedCategory,
+    search: debouncedSearchQuery,
+  });
 
-  const availableSubCategories = useMemo(() => {
-    const filtered = selectedCategory
-      ? allProductsKatalog.filter((p) => p.category === selectedCategory)
-      : allProductsKatalog;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 1000);
 
-    return Array.from(new Set(filtered.map((p) => p.subCategory)));
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const searchTriggeredRef = useRef(false);
+
+  useEffect(() => {
+    if (searchQuery !== debouncedSearchQuery) {
+      searchTriggeredRef.current = true;
+    }
+  }, [searchQuery, debouncedSearchQuery]);
+
+  useEffect(() => {
+    if (!productIsFetching) {
+      searchTriggeredRef.current = false;
+    }
+  }, [productIsFetching]);
+
+  useEffect(() => {
+    searchTriggeredRef.current = false;
+  }, [selectedCategory, selectedSubCat]);
+
+  console.log("asd", subCategories);
+  console.log("asd", selectedSubCat);
+
+  useEffect(() => {
+    setSelectedSubCat([]);
   }, [selectedCategory]);
 
-  const filteredProducts = useMemo(() => {
-    return allProductsKatalog.filter((product) => {
-      const matchCategory =
-        !selectedCategory || product.category === selectedCategory;
-      const matchSubCategory =
-        selectedSubCat.length === 0 ||
-        selectedSubCat.includes(product.subCategory);
-      const matchSearch = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      return matchCategory && matchSubCategory && matchSearch;
-    });
-  }, [selectedCategory, selectedSubCat, searchQuery]);
+  useEffect(() => {
+    if (!loadMoreRef.current || !productHasNextPage) return;
+
+    const checker = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          productFetchNextPage();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    checker.observe(loadMoreRef.current);
+    return () => checker.disconnect();
+  }, [productFetchNextPage, productHasNextPage]);
+
+  if (productIsError) {
+    return <p className="p-6 text-center text-destructive">{productIsError}</p>;
+  }
+
+  if (subCategoriesIsError) {
+    return (
+      <p className="p-6 text-center text-destructive">{subCategoriesIsError}</p>
+    );
+  }
+
+  const listCategory = useMemo(() => {
+    return categories ?? [];
+  }, [categories]);
+
+  const availableSubCategories = useMemo(() => {
+    return subCategories ?? [];
+  }, [subCategories]);
 
   return (
     <main className="min-h-screen bg-white pb-20">
@@ -52,7 +116,12 @@ export default function ProductsPage() {
             Katalog Produk
           </h2>
           <div className="relative w-full sm:max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            {searchQuery !== debouncedSearchQuery ||
+            (productIsFetching && searchTriggeredRef.current) ? (
+              <Spinner className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+            ) : (
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            )}
             <Input
               className="pl-9 w-full rounded-xl"
               value={searchQuery}
@@ -103,30 +172,24 @@ export default function ProductsPage() {
               <div
                 className={`${isFilterOpen ? "block" : "hidden"} lg:block px-4 py-4 max-h-[40vh] lg:max-h-[calc(100vh-300px)] overflow-y-auto border-t lg:border-t-0`}
               >
-                {availableSubCategories
-                  .slice(0, showAllSub ? availableSubCategories.length : 6)
+                {subCategories
+                  .slice(0, showAllSub ? subCategories.length : 6)
                   .map((sub) => (
-                    <div
-                      key={sub}
-                      className="flex mb-3 items-center gap-3 group"
-                    >
+                    <div key={sub.id} className="flex mb-3 items-center gap-3">
                       <Checkbox
-                        className="hover:cursor-pointer"
-                        id={sub}
-                        checked={selectedSubCat.includes(sub)}
+                        disabled={productIsLoading}
+                        id={sub.name}
+                        checked={selectedSubCat.includes(sub.name)}
                         onCheckedChange={(checked) =>
                           setSelectedSubCat((prev) =>
                             checked
-                              ? [...prev, sub]
-                              : prev.filter((v) => v !== sub),
+                              ? [...prev, sub.name]
+                              : prev.filter((v) => v !== sub.name),
                           )
                         }
                       />
-                      <label
-                        htmlFor={sub}
-                        className="text-sm cursor-pointer text-gray-600 group-hover:text-primary transition-colors"
-                      >
-                        {sub}
+                      <label htmlFor={sub.name} className="text-sm">
+                        {sub.name}
                       </label>
                     </div>
                   ))}
@@ -151,7 +214,7 @@ export default function ProductsPage() {
             <div className="flex overflow-x-auto pb-2 sm:pb-0 scrollbar-hide gap-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
               <Button
                 variant={!selectedCategory ? "default" : "outline"}
-                className={`rounded-xl hover:cursor-pointer text-sm sm:text-sm ${selectedCategory ? "hover:bg-primary" : "hover:bg-teal-700"}`}
+                className={`rounded-xl border-0 hover:cursor-pointer text-sm sm:text-sm ${selectedCategory ? "hover:bg-primary" : "hover:bg-teal-700"}`}
                 onClick={() => {
                   setSelectedCategory(null);
 
@@ -162,55 +225,76 @@ export default function ProductsPage() {
               </Button>
               {listCategory.map((cat) => (
                 <Button
-                  key={cat.label}
-                  className={`rounded-xl hover:cursor-pointer text-sm sm:text-sm ${selectedCategory !== cat.label ? "hover:bg-primary" : "hover:bg-teal-700"}`}
+                  key={cat.id}
+                  className={`rounded-xl hover:cursor-pointer border-0 text-sm sm:text-sm ${selectedCategory !== cat.name ? "hover:bg-primary" : "hover:bg-teal-700"}`}
                   variant={
-                    selectedCategory === cat.label ? "default" : "outline"
+                    selectedCategory === cat.name ? "default" : "outline"
                   }
                   onClick={() => {
-                    setSelectedCategory(cat.label);
+                    setSelectedCategory(cat.name);
                     setSelectedSubCat([]);
                   }}
                 >
-                  {cat.label}
+                  {cat.name}
                 </Button>
               ))}
             </div>
 
             {/* Grid Produk */}
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((product, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-50 rounded-2xl flex flex-col h-auto sm:h-96 p-4 sm:p-6"
-                  >
-                    <div className="flex items-center justify-center flex-1 min-h-[200px] sm:min-h-[240px]">
-                      <img
-                        className="h-auto max-h-[180px] sm:max-h-[220px] w-auto max-w-full object-contain"
-                        src={product.image}
-                        alt={product.name}
-                      />
-                    </div>
-
-                    <div className="mt-4 sm:mt-auto text-start">
-                      <p className="text-xs text-primary font-medium">
-                        {product.subCategory}
-                      </p>
-
-                      <h2 className="text-sm sm:text-md font-semibold line-clamp-2">
-                        {product.name}
-                      </h2>
-                    </div>
+            {productIsLoading ? (
+              <div className="bg-gray-50 rounded-2xl">
+                <div className="flex items-center justify-center py-10">
+                  <div className="flex-column justify-center">
+                    <Spinner className="size-20 text-primary mx-auto" />
+                    <p className="mt-4">Memuat Data Produk...</p>
                   </div>
-                ))
-              ) : (
-                <NoProductFound
-                  onReset={() => {
-                    setSearchQuery("");
-                    setSelectedCategory(null);
-                  }}
-                />
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="bg-gray-50 rounded-2xl flex flex-col h-auto sm:h-96 p-4 sm:p-6"
+                    >
+                      <div className="flex items-center justify-center flex-1 min-h-50 sm:min-h-60">
+                        <img
+                          className="h-auto max-h-45 sm:max-h-55 w-auto max-w-full object-contain"
+                          src={`${IMAGE_BASE_URL}${product.image_url}`}
+                          alt={product.image_alt}
+                        />
+                      </div>
+
+                      <div className="mt-4 sm:mt-auto text-start">
+                        <p className="text-xs text-primary font-medium">
+                          {product.sub_category}
+                        </p>
+
+                        <h2 className="text-sm sm:text-md font-semibold line-clamp-2">
+                          {product.nama}
+                        </h2>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <NoProductFound
+                    onReset={() => {
+                      setSearchQuery("");
+                      setSelectedCategory(null);
+                    }}
+                  />
+                )}
+              </div>
+            )}
+
+            <div ref={loadMoreRef}>
+              {prodctIsFetchingNextPage && (
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+                  <Skeleton className="bg-gray-200 rounded-2xl flex flex-col h-auto sm:h-96 p-4 sm:p-6"></Skeleton>
+                  <Skeleton className="bg-gray-200 rounded-2xl flex flex-col h-auto sm:h-96 p-4 sm:p-6"></Skeleton>
+                  <Skeleton className="bg-gray-200 rounded-2xl flex flex-col h-auto sm:h-96 p-4 sm:p-6"></Skeleton>
+                </div>
               )}
             </div>
           </div>
@@ -239,3 +323,10 @@ function NoProductFound({ onReset }: { onReset: () => void }) {
     </div>
   );
 }
+// function useEffect(arg0: () => (() => void) | undefined, arg1: any[]) {
+//   throw new Error("Function not implemented.");
+// }
+
+// function fetchNextPage() {
+//   throw new Error("Function not implemented.");
+// }

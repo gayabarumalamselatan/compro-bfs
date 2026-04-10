@@ -15,7 +15,7 @@ export function ContactSection() {
         </div>
 
         {/* Contact Info */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-3 gap-8 mb-12"> 
           <div className="bg-gray-50 p-10 rounded-2xl flex flex-col gap-5">
             <Mail className="size-8 text-primary" />
             <div className="flex flex-col gap-3">
