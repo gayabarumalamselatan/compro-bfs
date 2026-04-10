@@ -6,4 +6,6 @@ services:
       - "3000:3000"
     volumes:
       - /home/bfs/cms-bfs/media:/app/media:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped

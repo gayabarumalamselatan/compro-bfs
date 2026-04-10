@@ -5,7 +5,7 @@ import CountUp from "../ui/CountUp";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden min-h-screen bg-linear-to-b from-blue-50 to-white pt-0 pb-24 sm:pt-28 sm:pb-32">
+    <section className="relative overflow-hidden min-h-screen bg-linear-to-b from-blue-50 to-white pt-0 pb-24 sm:pt-28 sm:pb-32 items-center flex">
       {/* Grid Background */}
 
       <div className="absolute inset-0 z-0 overflow-hidden h-full">
