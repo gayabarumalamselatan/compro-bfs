@@ -9,6 +9,7 @@ import { Header } from "@/components/ui/header";
 import useProducts from "./useProduct";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
+import { buildMediaUrl } from "@/lib/utils";
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -261,7 +262,7 @@ export default function ProductsPage() {
                       <div className="flex items-center justify-center flex-1 min-h-50 sm:min-h-60">
                         <img
                           className="h-auto max-h-45 sm:max-h-55 w-auto max-w-full object-contain"
-                          src={`${IMAGE_BASE_URL}${product.image_url}`}
+                          src={buildMediaUrl(product.image_url)}
                           alt={product.image_alt}
                         />
                       </div>

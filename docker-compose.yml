@@ -4,6 +4,8 @@ services:
     container_name: compro-bfs
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     volumes:
       - /home/bfs/cms-bfs/media:/app/media:ro
     extra_hosts:

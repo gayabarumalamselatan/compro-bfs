@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { buildMediaUrl } from "@/lib/utils";
 
 export async function GET(req: Request) {
   try {
@@ -43,7 +44,7 @@ export async function GET(req: Request) {
         const product = rel.product;
         return {
           src: product?.product_media?.url
-            ? `${IMAGE_BASE_URL}${product.product_media.url}`
+            ? buildMediaUrl(product.product_media.url)
             : null,
           title: product?.nama ?? "",
           desc: product?.sub_category?.sub_kategori ?? "",
