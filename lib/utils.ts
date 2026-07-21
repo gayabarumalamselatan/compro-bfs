@@ -7,7 +7,17 @@ export function cn(...inputs: ClassValue[]) {
 
 export function buildMediaUrl(url?: string | null) {
   if (!url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+  let path = url;
+  try {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const parsedUrl = new URL(url);
+      path = parsedUrl.pathname;
+    }
+  } catch (e) {
+    // ignore
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_IMAGE_PATH_URL || '';
-  return `${baseUrl.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+  return `${baseUrl.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 }
