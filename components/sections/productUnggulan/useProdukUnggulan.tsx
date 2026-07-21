@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
+import { productServices } from "@/services/products.service";
 export interface MarqueeItem {
   src: string;
   title: string;
@@ -8,7 +7,7 @@ export interface MarqueeItem {
 }
 
 const fetchFeaturedMedia = async (id: number): Promise<MarqueeItem[]> => {
-  const { data } = await axios.get(`/api/featured-products/media?id=${id}`);
+  const { data } = await productServices.getFeaturedMedia(id);
   return data.data;
 };
 

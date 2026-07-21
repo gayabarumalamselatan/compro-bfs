@@ -1,5 +1,6 @@
 import Image from "next/image";
 import clsx from "clsx";
+import { buildMediaUrl } from "@/lib/utils";
 
 interface LogoItem {
   src: string;
@@ -34,7 +35,7 @@ export function Marquee({ items, direction = "left", speed = 30 }: Props) {
           >
             <div className="relative h-16 w-32 transition">
               <Image
-                src={item.src}
+                src={buildMediaUrl(item.src)}
                 alt={item.title}
                 fill
                 className="object-contain"
